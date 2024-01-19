@@ -1,0 +1,30 @@
+<html>
+<title> 註冊 </title>
+<boyd>
+
+    <h1> 歡迎貴賓來到本站註冊 </h1>
+    <p> 以下資料請協助填入 </p>
+    <p> 按下確認註冊後，本系統會寄送驗證信件</p>
+
+        {% if register == "error"%}
+            <p> 表單輸入有誤，請重新註冊一次 </p>
+        {% elif register == "registered" %}
+            <p> 帳號已經註冊過了 </p>
+        {% endif %}
+      <form action= "{% url 'register' %}" method="post">
+        {% csrf_token %}
+          <p>輸入帳號</p>
+          <p><input type = "text" name = "user" value="" /></p>
+          <p>輸入密碼</p>
+          <p><input type = "password" name = "password" value=""/></p>
+          <p>輸入名子</p>
+          <p><input type = "text" name = "name" value=""/></p>
+          <p>輸入email</p>
+          <p><input type = "text" name = "email" value=""/></p>
+
+          <p><input type = "submit" value = "確認註冊" /></p>
+      </form>
+
+</body>
+</html>
+

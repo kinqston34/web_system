@@ -1,0 +1,22 @@
+
+
+header {
+    text-align: center;
+}
+
+hr {
+    border: 2px solid #acacac;
+}
+
+#logout{
+    border-radius: 50%;
+    background-color: orange;
+    padding : 20px;
+}
+
+#logout:hover{
+    font-size: 180%;
+    color: black;
+    background-color: bisque;
+}
+

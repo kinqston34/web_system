@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+{% load django_bootstrap5 %}
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title> index </title>
+
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/listdown.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    </head>
+    <body>
+        <header class="listdown">
+            <div class="container">    <!-- 特殊動畫 垂幕效果-->
+                <nav class="listdown_nav">
+                    <a href="#" class="title">
+                        <div class="inner"><span class="title-text"> 論壇 </span></div>
+                        <div class="inner"><span class="title-text"> 各大論壇 </span></div>
+
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-bar-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5M8 6a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L7.5 12.293V6.5A.5.5 0 0 1 8 6"/>
+                            </svg>
+                        </div>
+                    </a>
+
+                    <div class="listdown_list">
+                        <ul>
+                            <li><a href=""> ptt </a></li>
+                            <li><a href=""> Dcard </a></li>
+                            <li><a href=""> ccc </a></li>
+                            <li><a href="">四人房型</a></li>
+                        </ul>
+                    </div>
+                </nav>
+
+
+
+                <!-- header三個按鈕 -->
+
+                <div class="row d-flex flex-row-reverse mx-2">
+                    <div class="col-1 mx-3">
+                        <div clas="dropdown">
+                        <button id="log_in" class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        log in
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="log_in">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'login' %}">登入</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'register' %}">註冊</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'logout' %}">登出</a>
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-1 mx-3">
+                        <div clas="dropdown">
+                            <button id="interview" class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            介紹
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="interview">
+                                <li>
+                                    <a class="dropdown-item" href="#">特性</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">特例</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-1 mx-4">
+                        <div class="dropdown">
+                            <button id="col_3" class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            News
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="col_3">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'IThome' %}">IThome </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'TechNews' %}">TechNews</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    <!-----  main  ----->
+
+    <!-- container1 -->
+        <section class="container" >
+            <div class="news-type">
+
+                <!--test-->
+                    {% block nav %}{% endblock %}
+                <!--test-->
+
+            </div>
+        </section>
+
+        <main class= "container news">
+            <div class="row">
+                {% block card %}{% endblock  %}
+            </div>
+        </main>
+
+        <footer class="container mt-3">
+            <div class="row">
+                <div class="col border border-primary f-col1 div-text1">
+                    <p class="text-center">本站為學習上使用，並未做任何營利行為</p>
+                </div>
+                <div class="col">
+                    2
+                </div>
+            </div>
+        </footer>
+
+
+    </body>
+</html>

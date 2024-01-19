@@ -1,0 +1,48 @@
+
+main{
+    border: 1px solid red;
+    min-height: 500px;
+}
+
+footer{
+    border: 1px solid blue;
+    min-height: 200px;
+}
+
+.btn:hover{
+    color: #cfcfcf;
+}
+
+.dropdown-item:hover {
+	color: brown;
+}
+
+
+.news-type{
+    background-color: aqua;
+    margin-top: 10px;
+    min-height: 50px;
+    border: 5px solid aqua;
+    border-radius: 20px 20px 0 0;
+}
+
+.nav-title{
+    margin-left: 2rem;
+    font-size: 150%;
+}
+
+.news-link{
+    margin-left: 2rem;
+    color: black;
+    font-size: 1.2rem;
+}
+
+.news-link:hover{
+    font-size: 1.5rem;
+    background-color: orange;
+    color: red;
+}
+
+/* 主板 切版調整 */
+
+

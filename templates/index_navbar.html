@@ -1,0 +1,29 @@
+{% extends "index_card.html" %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand">
+                <!--連結網址 以後要改 -->
+    {% if newsname == "IThome" %}
+    <div class="nav-title navbar-brand">IThome</div>
+    <ul class="nav narbar-nav">
+        <li>
+            <a class="news-link" href="http://127.0.0.1:8000/web_app/index/IThome/news/">新聞</a>
+        </li>
+        <li>
+            <a class="news-link" href="http://127.0.0.1:8000/web_app/index/IThome/product/">產品&技術</a>
+        </li>
+        <li>
+            <a class="news-link" href="http://127.0.0.1:8000/web_app/index/IThome/security/">資安</a>
+        </li>
+    </ul>
+
+    {% elif newsname == "TechNews" %}
+    <div class="nav-title navbar-brand">TechNews</div>
+    <a class="news-link" href="http://127.0.0.1:8000/web_app/index/TechNews/news/">新聞</a>
+    <a class="news-link" href="http://127.0.0.1:8000/web_app/index/TechNews/tech/">尖端科技</a>
+    <a class="news-link" href="http://127.0.0.1:8000/web_app/index/TechNews/semi/">半導體</a>
+    <a class="news-link" href="http://127.0.0.1:8000/web_app/index/TechNews/net/">網路</a>
+    {% endif %}
+</nav>
+
+{% endblock %}

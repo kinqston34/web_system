@@ -1,0 +1,171 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700&display=swap');
+
+body{
+    background-color: antiquewhite;
+    background-size: cover; /*設定全圖覆蓋*/
+}
+
+.listdown {
+    height: 30vh;
+    font-family: 'Noto Serif TC', serif; /* 與外掛 line-2 要成對*/
+    /* background-image: url(); */
+}
+
+a{   /*取消文字樣式設定 並設定為白色*/
+    color:white;
+    text-decoration: none;
+}
+
+.title-text{
+    font-weight: 700;
+}
+
+.listdown_nav{
+    display: flex;
+    flex-direction: row;
+
+    & .title{      /* "&" 代表上層，在這裡=".nav"*/
+        color: #fff;
+        display: flex;
+        overflow: hidden; /* 超過隱藏*/
+        flex-direction: column;
+        font-size: 5rem;
+        line-height: 1.2;
+        height: 1.2em;
+        position: relative;
+        margin-left: 60px;
+        margin-top: 60px;
+        z-index: 2;
+        width: 50%;
+    }
+
+}
+
+.inner{
+    transform: translateY(0);
+    transition: transform .6s;
+
+}
+
+.icon{
+    position: absolute;
+    /*background-color: ;*/
+    width:96px;
+    height:96px;
+    padding:28px;
+    left:320px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color .3s;
+}
+
+.icon svg{
+    transition: transform .6s;
+
+}
+
+.icon svg path{
+    stroke: white;
+}
+
+
+.listdown_list{
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    min-height: 440px;
+    display: flex;
+    align-items: end;
+    width: 100%;
+    padding-left: 60px;
+    padding-bottom: 20px;
+    background-color: rgba(0,0,0,.1);
+    backdrop-filter: blur(6px);
+
+    transition: transform .6s;
+    transform: translateY(-100%);
+
+    & ul {
+        list-style-type: none; /* 將清單樣式拿掉*/
+        padding-left:0;  /*並且位置歸*/
+    }
+    & li {
+        transition: transform .5s,opacity .5s;
+        transition-delay: 3s;
+
+        opacity: 0;
+        transform: translateY(40px);
+
+        &:nth-of-type(1){
+            transition-delay: .2s;
+        }
+
+        &:nth-of-type(2){
+            transition-delay: .3s;
+        }
+
+        &:nth-of-type(3){
+            transition-delay: .4s;
+        }
+
+        &:nth-of-type(4){
+            transition-delay: .5s;
+        }
+    }
+
+    & a {
+        color: #fff;
+        font-size: 2rem;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+        transition: trnasform .5s;
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #fff;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity .5s,trasform .5s;
+        }
+    }
+
+
+}
+
+.listdown_nav:hover{
+
+    & .inner{
+        transform: translateY(-100%);
+    }
+    & .icon{
+        background-color:rgba(250, 235, 215, 0.2);
+    }
+    & .icon svg{
+        transform: rotate(180deg);
+    }
+
+    & .listdown_list{
+        transform: translateY(0);
+    }
+
+    & li {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.listdown_list a:hover::after {
+    transform: scale(1);
+    opacity: 1;
+}
+

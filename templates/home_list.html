@@ -1,0 +1,13 @@
+{% extends "home.html" %}
+
+{% block list %}
+{% for db in db_list %}
+<tr>
+    <td> {{db.user}} </td>
+    <td> {{db.name}} </td>
+    <td> {{db.email}}</td>
+</tr>
+{% endfor %}
+
+{% endblock %}
+

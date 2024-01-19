@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    {% load django_bootstrap5%}
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title> home </title>
+    {% bootstrap_css %} {% bootstrap_javascript%}
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+</head>
+
+<body>
+    <header class="container">
+        <div class="row col">
+            <h1> {{ username }}，歡迎登入後台系統 </h1>
+            <form action="{% url 'logout' %}" method= "get">
+                <p><input id="logout" class="btn" type="submit" value="登出" /></p>
+            </form>
+        </div>
+    </header>
+    <br><hr><br>
+
+    <div class="container row d-flex flex-row">
+        <div class="col">
+        <form action="{% url 'home_list' %}">
+            <p><input class="btn btn-outline-secondary" type="submit" value="目前有註冊的人"/></p>
+        </form>
+        </div>
+        <div class="col">
+        <form action="{% url 'home' %}">
+            <p><input class="btn btn-outline-secondary" type="submit" value="收起來"/></p>
+        </form>
+        </div>
+    </div>
+
+    <table class="table table-hover">
+        <tr>
+            <td> 帳號 </td>
+            <td> 用戶姓名 </td>
+            <td> email</td>
+        </tr>
+        {% block list %}{% endblock %}
+
+    </table>
+
+</body>
+</html>

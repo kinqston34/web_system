@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load django_bootstrap5 %}
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title> picture </title>
+        {%bootstrap_css%}
+        {% bootstrap_javascript %}
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/picture.css' %}">
+    </head>
+    <body>
+
+        <div>
+            <h3> 檔案上傳區: </h3>
+
+
+        <form action="{% url 'pictureupdate' %}" enctype = "multipart/form-data" method="post">
+            {%csrf_token%}
+            {% if saved == True %}
+            <div>
+                <p> 檔案上傳成功 </p>
+            </div>
+            {% elif saved == False %}
+            <div>
+                <P> 檔案上傳失敗 </P>
+            </div>
+            {% else}
+            <div>
+                <P></P>
+            </div>
+            {% endif %}
+
+        <div  class="row align-items-start">
+            <div class="col-sm">
+                <div class="mb-3">
+                        <label class="form-label"> 搜尋關鍵字 </label>
+                        <input class="form-control" type="text" placeholder = "搜尋關鍵字" name = "filename">
+                </div>
+            </div>
+                <br>
+            <div class="col-sm">
+                <div class="mb-3">
+                        <label class="form-label"> 照片 </label>
+                        <input class="form-control" type="file" placeholder = "照片檔案" name = "picture">
+                </div>
+            </div>
+            <br>
+            <div>
+                <div class="mb-3 button">
+                        <button class="btn btn-primary form-control" type="submit"> 上傳 </button>
+                </div>
+            </div>
+        </div>
+
+        </form>
+
+    </body>
+</html>

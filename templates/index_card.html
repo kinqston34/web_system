@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+
+{% block nav %}
+    {% block navbar %}{% endblock %}
+{% endblock %}
+
+{% block card %}
+{% for item in data %}
+
+    <div class="col-4 border mb-3">
+        <div class="card">
+            <div class="card-header h5">
+                {{ item.source }}
+            </div>
+            <div class="card-body">
+                <div class="card-text">{{ item.description}}</div>
+                <div class="card-link text-center">
+                    <a href="{{ item.href }}" class="btn btn-primary">go</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% endblock  %}

@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC&display=swap');
+
+body {
+    font-family: 'Noto Serif TC', serif;
+}
+
+label{
+    font-size: 1.5rem;
+}
+
+.title{
+    color: #bcbcbc;
+    font-style:italic; 
+}
+
+.alarm{
+    font-size: 1.2rem;
+    color: rgb(255, 81, 0);
+}
+
+.success{
+    font-size: 1.2rem;
+    color: rgb(0, 12, 235);
+}
+
+
+
+footer{
+    min-height: 200px;
+    margin-top: 20vh;
+
+    & span{
+        font-size: 1.5rem;
+
+        & strong{
+            background-color: antiquewhite;
+            margin-left: 2rem;
+        }
+    }
+
+
+}
