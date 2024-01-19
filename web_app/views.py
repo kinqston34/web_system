@@ -4,10 +4,12 @@ from web_app.models import Visitor,Picture
 from web_app.forms import LoginForm,RegiesterForm,PictureForm
 from django.urls import reverse
 from django.views.generic import TemplateView,ListView
-from django.core.mail import send_mail
+from django.core.mail import send_mail,EmailMessage
 from django.template.loader import render_to_string
 from web_app.crawls.ithome_news import IThome_News,IThome_Tech,IThome_Security
 from web_app.crawls.technews import TechNews,TechNews_Net,TechNews_Tech,TechNews_Semi
+from random import randint 
+
 # Create your views here.
 
 class Homelist(ListView):
@@ -47,8 +49,7 @@ class IndexCardView(TemplateView):
         return content
 
 def test(request,type=None):
-    print("type: ",type)
-    return HttpResponse("ok")
+    return render(request,"forget_email.html")
 
 def index_card(request):
     request.get_full_path_info()
@@ -90,6 +91,55 @@ def logout(request):
     else:
         return redirect("index")
 
+def forget_password(request):
+
+    if request.method == "POST":
+        user = request.POST["user"]
+        data = db_visitor_read(user=user)
+        if data == False:
+            username = False
+        else:
+            #寄發修改密碼帳戶確認驗證信
+            username = [True,data.user]
+            send_forget_email(request,data.user)    #傳送email
+        return render(request,"forget_password2.html",{"user":username})    
+    else:
+        return render(request,"forget_password2.html")    
+
+def forget_email_vertified(request):
+    print(request.session['rand'])
+    print(request.session)
+    if request.session['rand'] :
+        return HttpResponse("驗證成功")
+    else:
+        return redirect("forget_password")
+
+def send_forget_email(request,user=None):
+    
+    def sendemail():
+        rand = str(randint(1,10000))
+        request.session["rand"] = rand
+        email_template = render_to_string(
+            "forget_email.html",
+            {"user":user,"rand":rand},
+        )
+        email = EmailMessage(
+            '修改密碼通知信',  #email title
+            email_template,   #email content
+            "aa3741867@gmail.com", #寄件者
+            ["aa37741867@gmail.com"], #收件者
+        )
+        email.content_subtype = "html" #content 轉換成html格式
+        email.send()
+
+    if user !=None:
+        request.session["user"] = user
+        sendemail()
+    elif request.session["user"] != None:
+        user = request.session["user"]
+        sendemail()
+        return render(request,"forget_password2.html",{"user":[True,user]})
+    
 def home(request):
 
     if request.COOKIES['login_id'] == "1":
@@ -168,11 +218,12 @@ def db_visitor_insert(user,password,name,email): #Visitor 新增資料
 
 def db_visitor_read(user=None):  #Visitor 讀取資料
 
-    if user == None:
+    if user != None:
         try:
             read = Visitor.objects.get(user = user)
         except:
-            return HttpResponse("您指定的帳號查無資料")
+            return False
+            # return HttpResponse("您指定的帳號查無資料")
     else:
         read = Visitor.objects.all()
     return read
