@@ -1,7 +1,7 @@
 from typing import Any
 from django.shortcuts import render,redirect,HttpResponse
 from web_app.models import Visitor,Picture
-from web_app.forms import LoginForm,RegiesterForm,PictureForm
+from web_app.forms import LoginForm,RegiesterForm,PictureForm,ResetPasswordForm
 from django.urls import reverse
 from django.views.generic import TemplateView,ListView
 from django.core.mail import send_mail,EmailMessage
@@ -12,7 +12,7 @@ from random import randint
 
 # Create your views here.
 
-class Homelist(ListView):
+class Homelist(ListView): 
     model = Visitor
     template_name = "home_list.html"
     context_object_name = "db_list"
@@ -47,9 +47,9 @@ class IndexCardView(TemplateView):
         content["data"] = news.news_django_used()
         content["newsname"] = news.__str__
         return content
-
+#==============  function =================#
 def test(request,type=None):
-    return render(request,"forget_email.html")
+    return render(request,"forget_password2.html",{"token":True,"user":"aaa"})
 
 def index_card(request):
     request.get_full_path_info()
@@ -76,6 +76,10 @@ def login(request,login=None):
     else:
         if 'login_id' in request.COOKIES :
             return redirect('home')
+        if 'modify_password' in request.COOKIES and request.COOKIES['modify_password'] == "success":
+            responese = render(request,"login.html",{"modify":"success"})
+            responese.delete_cookie("modify_password")
+            return responese
         return render(request,"login.html")
 
 def logout(request):
@@ -90,9 +94,9 @@ def logout(request):
         return res
     else:
         return redirect("index")
-
+#============== 忘記密碼 =================#
 def forget_password(request):
-
+    
     if request.method == "POST":
         user = request.POST["user"]
         data = db_visitor_read(user=user)
@@ -102,17 +106,45 @@ def forget_password(request):
             #寄發修改密碼帳戶確認驗證信
             username = [True,data.user]
             send_forget_email(request,data.user)    #傳送email
-        return render(request,"forget_password2.html",{"user":username})    
+            # print(request.session['rand'])
+        return render(request,"forget_password2.html",{"user":username}) 
+       
+    elif "token" in request.COOKIES and request.COOKIES['token'] == "False":
+        respone = render(request,"forget_password2.html",{"token":False})
+        respone.delete_cookie("token")
+        return respone
     else:
         return render(request,"forget_password2.html")    
 
-def forget_email_vertified(request):
-    print(request.session['rand'])
-    print(request.session)
-    if request.session['rand'] :
-        return HttpResponse("驗證成功")
+def forget_email_vertified(request,rand):  
+    # print(request.session['rand'])
+    if request.session['rand'] == rand:   #驗證信成功
+        user = request.session["user"]
+        return render(request,"forget_password2.html",{"token":True,"user":user})
     else:
-        return redirect("forget_password")
+        responese = redirect("forget_password")   #驗證信失敗
+        responese.set_cookie("token","False")
+        return responese
+
+def reset_password(request):
+    
+    if request.method == "POST":
+        user = request.session["user"]
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            again = form.cleaned_data['again']
+            if password != again :
+                return render(request,"forget_password2.html",{"token":True,"user":user,"error":True})
+            else:
+                data = Visitor.objects.get(user=user)
+                data.password = password
+                data.save()
+                respone = redirect("login")
+                respone.set_cookie("modify_password","success")
+                return respone
+        else:
+            return render(request,"forget_password2.html",{"token":True,"user":user,"error":"more"})
 
 def send_forget_email(request,user=None):
     
@@ -139,7 +171,7 @@ def send_forget_email(request,user=None):
         user = request.session["user"]
         sendemail()
         return render(request,"forget_password2.html",{"user":[True,user]})
-    
+#==============  home 後台 =================#    
 def home(request):
 
     if request.COOKIES['login_id'] == "1":
@@ -148,7 +180,7 @@ def home(request):
     else:
         return redirect("login")
 
-
+#==============  註冊 =================#
 def register(request,register=None):
 
     if request.method == "POST":
@@ -187,9 +219,7 @@ def register_success(request):
         return render(request,"login.html",{"login":"register"})
     else:
         return HttpResponse("404")
-
-
-
+#==============  照片上傳 =================#
 def pictureupdate(request):
     saved = 1
     if request.method == "POST":
@@ -205,8 +235,7 @@ def pictureupdate(request):
 
     return render(request,"picture.html",{"save":saved})
 
-
-
+#============== 資料庫 Visitor crud =================#
 def db_visitor_insert(user,password,name,email): #Visitor 新增資料
 
     visitor = Visitor()

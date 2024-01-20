@@ -41,6 +41,10 @@ class RegiesterForm(LoginForm):
         #     return False
         return password
 
+class ResetPasswordForm(forms.Form):
+    password = forms.CharField(max_length=20,widget=forms.PasswordInput())
+    again = forms.CharField(max_length=20,widget=forms.PasswordInput())
+
 class PictureForm(forms.Form):
     filename = forms.CharField(max_length=30)
     picture = forms.ImageField(allow_empty_file=False)

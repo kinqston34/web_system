@@ -34,6 +34,10 @@
                         不合法的輸入，規則如備註
                     </span>
                     {% endif %}
+
+                    {% if modify == "success" %}
+                        <p class="text-success fs-4">修改密碼成功，請再次登入<p>
+                    {% endif %}
                 </div>
             </div>
 
@@ -52,17 +56,17 @@
                     </div> 
                 </div>    
                 <div class="row mt-3 justify-content-center">
-                    <div class="col-sm-1">
+                    <div class="col-md-1">
                         <button class="btn btn-primary text-nowrap" type = "submit" value="登入">登入</button>
                     </div> 
             </form>
-                    <div class="col-sm-1">
+                    <div class="col-md-1 me-md-4">
                         <form action= "{% url 'register' %}">
                             <button class="btn btn-primary text-nowrap" type = "submit" value = "我要註冊">我要註冊</button>
                         </form>
                     </div>
                     
-                    <div class="col-sm-1">
+                    <div class="col-md-1">
                         <form action="{% url 'forget_password' %}">
                             <button class="btn btn-primary text-nowrap" type="submit" value="忘記密碼">忘記密碼</button>
                         </form>
