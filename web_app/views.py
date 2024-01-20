@@ -208,6 +208,7 @@ def register_success(request):
         content = render_to_string("vertified_email.html",{"username":read.name},request)
         sender = "aa3741867@gmail.com"
         email_res = send_mail(title,"",sender,["aa37741867@gmail.com"],html_message=content)
+        #===註冊驗證===#
         return render(request,"login.html",{"login":"register"})
     else:
         return HttpResponse("404")
