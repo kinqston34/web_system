@@ -95,7 +95,7 @@ def logout(request):
     else:
         return redirect("index")
 #============== 忘記密碼 =================#
-def forget_password(request):
+def forget_password(request,rand=None):
     
     if request.method == "POST":
         user = request.POST["user"]
@@ -108,24 +108,16 @@ def forget_password(request):
             send_forget_email(request,data.user)    #傳送email
             # print(request.session['rand'])
         return render(request,"forget_password2.html",{"user":username}) 
-       
-    elif "token" in request.COOKIES and request.COOKIES['token'] == "False":
-        respone = render(request,"forget_password2.html",{"token":False})
-        respone.delete_cookie("token")
-        return respone
-    else:
-        return render(request,"forget_password2.html")    
-
-def forget_email_vertified(request,rand):  
-    # print(request.session['rand'])
-    if request.session['rand'] == rand:   #驗證信成功
+    
+    if request.session['rand'] == rand:   #驗證信成功   
         user = request.session["user"]
         return render(request,"forget_password2.html",{"token":True,"user":user})
     else:
-        responese = redirect("forget_password")   #驗證信失敗
-        responese.set_cookie("token","False")
-        return responese
-
+        if rand == None:
+            return render(request,"forget_password2.html")
+        else:                
+            return render(request,"forget_password2.html",{"token":False})
+    
 def reset_password(request):
     
     if request.method == "POST":

@@ -25,8 +25,8 @@ urlpatterns = [
     url(r"^register/",views.register,name="register"),
 
     #======login/forget_password======#
-    url(r"^login/forget_password/",views.forget_password,name="forget_password"),
-    url(r"^login/forget_mail_vertified/(?P<rand>\w+)/",views.forget_email_vertified,name="forget_email_vertified"),
+    url(r"^login/forget_password/(?P<rand>\w+)?",views.forget_password,name="forget_password"),
+    # url(r"^login/forget_mail_vertified/(?P<rand>\w+)/",views.forget_email_vertified,name="forget_email_vertified"),
     url(r"^login/forget_email/*",views.send_forget_email,name="forget_email"),
     url(r"^login/reset_password/",views.reset_password,name="reset_password"),
     
