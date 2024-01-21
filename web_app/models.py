@@ -7,6 +7,7 @@ class Visitor(models.Model):
     name = models.CharField(max_length = 50)
     email = models.CharField(max_length = 30)
     vertified = models.BooleanField(default = False)
+    
 
     class Meta:
         db_table = "visitor"
@@ -17,3 +18,10 @@ class Picture(models.Model):
 
     class Meta:
         db_table = "picture"
+
+class ForgetPassword(models.Model):
+    visitor = models.ForeignKey(Visitor,on_delete=models.CASCADE)
+    checkemail = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "ForgetPassword"

@@ -1,6 +1,6 @@
 from typing import Any
 from django.shortcuts import render,redirect,HttpResponse
-from web_app.models import Visitor,Picture
+from web_app.models import Visitor,Picture,ForgetPassword
 from web_app.forms import LoginForm,RegiesterForm,PictureForm,ResetPasswordForm
 from django.urls import reverse
 from django.views.generic import TemplateView,ListView
@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from web_app.crawls.ithome_news import IThome_News,IThome_Tech,IThome_Security
 from web_app.crawls.technews import TechNews,TechNews_Net,TechNews_Tech,TechNews_Semi
 from random import randint 
+import time
 
 # Create your views here.
 
@@ -47,6 +48,7 @@ class IndexCardView(TemplateView):
         content["data"] = news.news_django_used()
         content["newsname"] = news.__str__
         return content
+
 #==============  function =================#
 def test(request,type=None):
     return render(request,"forget_password2.html",{"token":True,"user":"aaa"})
@@ -107,11 +109,20 @@ def forget_password(request,rand=None):
             username = [True,data.user]
             send_forget_email(request,data.user)    #傳送email
             # print(request.session['rand'])
-        return render(request,"forget_password2.html",{"user":username}) 
-    
-    if request.session['rand'] == rand:   #驗證信成功   
+            
+            return render(request,"forget_password2.html",{"user":username}) 
+               
+    if 'rand' in request.session and request.session['rand'] == rand:   #驗證信成功   
         user = request.session["user"]
-        return render(request,"forget_password2.html",{"token":True,"user":user})
+        try:
+            data = Visitor.objects.get(user=user)
+            data = ForgetPassword.objects.get(visitor=data)
+        except:
+            return HttpResponse("沒有這個user")
+        else:
+            data.checkemail = True
+            data.save()
+        return HttpResponse("驗證成功，請回到剛剛畫面按下，[驗證]")
     else:
         if rand == None:
             return render(request,"forget_password2.html")
@@ -119,25 +130,33 @@ def forget_password(request,rand=None):
             return render(request,"forget_password2.html",{"token":False})
     
 def reset_password(request):
+    user = request.session["user"]
+    data = Visitor.objects.get(user=user)
+    fp = ForgetPassword.objects.get(visitor=data) 
     
     if request.method == "POST":
-        user = request.session["user"]
-        form = ResetPasswordForm(request.POST)
-        if form.is_valid():
-            password = form.cleaned_data['password']
-            again = form.cleaned_data['again']
-            if password != again :
-                return render(request,"forget_password2.html",{"token":True,"user":user,"error":True})
+        if fp.checkemail == True:
+        
+            form = ResetPasswordForm(request.POST)
+            if form.is_valid():
+                password = form.cleaned_data['password']
+                again = form.cleaned_data['again']
+                if password != again :
+                    return render(request,"forget_password2.html",{"token":True,"user":user,"error":True})
+                else:
+                    # data = Visitor.objects.get(user=user)
+                    data.password = password
+                    data.save()
+                    respone = redirect("login")
+                    respone.set_cookie("modify_password","success")
+                    return respone
             else:
-                data = Visitor.objects.get(user=user)
-                data.password = password
-                data.save()
-                respone = redirect("login")
-                respone.set_cookie("modify_password","success")
-                return respone
-        else:
-            return render(request,"forget_password2.html",{"token":True,"user":user,"error":"more"})
-
+                return render(request,"forget_password2.html",{"token":True,"user":user,"error":"more"})
+    
+        elif fp.checkemail == False:
+            user = [True,user]
+            return render(request,"forget_password2.html",{"user":user,"error":"no"})
+    
 def send_forget_email(request,user=None):
     
     def sendemail():
@@ -238,6 +257,10 @@ def db_visitor_insert(user,password,name,email): #Visitor 新增資料
     visitor.email = email
     visitor.save()
 
+    fp = ForgetPassword()
+    fp.visitor = visitor
+    fp.save()
+
 def db_visitor_read(user=None):  #Visitor 讀取資料
 
     if user != None:
@@ -268,6 +291,24 @@ def db_visitor_update(user,password,name,email):  #Visitor 修改資料
     else:
         db_visitor_delete(user)
         db_visitor_insert(user,password,name,email)
+
+def copy(request):  #更新Visitor 資料到新資料表
+    a = Visitor.objects.all()
+    c = ForgetPassword.objects.all()
+    c.delete()
+    for i in a:
+        b = ForgetPassword()
+        b.visitor = i
+        b.save()
+    return HttpResponse("copy success")
+
+def delete(request):
+    user = "tomy"
+    db_visitor_delete(user)
+    return HttpResponse("Delete success")
+
+
+    
 
 
 
