@@ -20,9 +20,10 @@ urlpatterns = [
     url(r"^logout/",views.logout,name="logout"),
     
     #======register======#
-    url(r"^login/?$",views.register_success,name="register_success"),
+    url(r"^register/(?P<rand>\w+)+$",views.register_vertified,name="register_vertified"),
     # url(r"^register/(?P<register>)*",views.register,name="register"),
     url(r"^register/",views.register,name="register"),
+    url(r"login/register_sucess/",views.register_success,name="register_success"),
 
     #======login/forget_password======#
     url(r"^login/forget_password/(?P<rand>\w+)?",views.forget_password,name="forget_password"),

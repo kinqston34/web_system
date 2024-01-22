@@ -27,8 +27,8 @@
                     <p class="success"> {{ user }}，登出成功 </p>
                     {% elif login == "error" %}
                     <p class="alarm"> 帳號密碼錯誤，請重新輸入 </p>
-                    {% elif login == "register" %}
-                    <p class="success"> 註冊成功，已寄送驗證信，請前去信箱驗證收信</p>
+                    {% elif login == "register_success" %}
+                    <p class="success"> 註冊驗證成功，可以登入</p>
                     {% elif login == "elligal"%}
                     <span class="alarm">
                         不合法的輸入，規則如備註

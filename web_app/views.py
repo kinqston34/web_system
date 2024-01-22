@@ -153,13 +153,14 @@ def reset_password(request):
                     return render(request,"forget_password2.html",{"token":True,"user":user,"error":True})
                 else:
                     # data = Visitor.objects.get(user=user)
-                    data.password = password                            #更新資料庫密碼 ，並且將設定通關cookies 刪除 and checkmail 改回預設 
+                    data.password = password                            #更新資料庫密碼，並且將設定通關cookies session 刪除 and checkmail 改回預設 
                     data.save()
                     respone = redirect("login")
                     respone.delete_cookie('count')
                     respone.set_cookie("modify_password","success")
                     fp.checkemail = False
                     fp.save()
+                    del request.session['rand']
                     return respone
             else:
                 return render(request,"forget_password2.html",{"token":True,"user":user,"error":"more"})
@@ -205,6 +206,14 @@ def home(request):
 #==============  註冊 =================#
 def register(request,register=None):
 
+    def register_email(user):    #寄送驗證信
+        rand = str(randint(0,10000))
+        request.session['rand'] = rand
+        title = "親愛的,"+user+"您好，這是網站驗證信"
+        content = render_to_string("vertified_email.html",{"username":user,"rand":rand},request)
+        sender = "aa3741867@gmail.com"
+        send_mail(title,"",sender,["aa37741867@gmail.com"],html_message=content)
+
     if request.method == "POST":
         form  = RegiesterForm(request.POST)
         if form.is_valid():
@@ -218,30 +227,53 @@ def register(request,register=None):
             print("name : ",name)
             print("email : ",email)
             if user :
+                register_email(user)
                 db_visitor_insert(user,password,name,email)
                 print("資料庫儲存成功")
-                responese = redirect('register_success')
-                responese.set_cookie("register",user)
-                return responese
+                request.session['register'] = user
+                return render(request,"register2.html")
             return render(request,"register.html",{"register":"registered"})
         else:
             return render(request,"register.html",{"register":"error"})
+    elif 'register' in request.session:
+        register = request.session['register']
+        try:
+            db = Visitor.objects.get(user = register)
+        except:
+            return render(request,"register.html",{"register":"again"})
+        else:
+            register_email(db.user)
+            return render(request,"register2.html",{"resend":"success"})
     else:
         return render(request,"register.html")
 
+    
+def register_vertified(request,rand):
+
+    if rand == request.session['rand']:
+        try:
+            register = request.session['register']
+            db = Visitor.objects.get(user=register)
+            db.vertified = True
+            db.save()
+        except:
+            return HttpResponse("沒有這位註冊者，驗證失敗")
+        else:
+            return HttpResponse("驗證成功，請回到原網頁按下[驗證]")
+    else:
+        return HttpResponse("驗證失敗")
+    
 def register_success(request):
 
-    if "register" in request.COOKIES:
-        user = request.COOKIES['register']
-        read = Visitor.objects.get(user = user)
-        title = "親愛的,"+read.name+"您好，這是網站驗證信"
-        content = render_to_string("vertified_email.html",{"username":read.name},request)
-        sender = "aa3741867@gmail.com"
-        email_res = send_mail(title,"",sender,["aa37741867@gmail.com"],html_message=content)
-        #===註冊驗證===#
-        return render(request,"login.html",{"login":"register"})
+    register = request.session["register"] 
+    db = Visitor.objects.get(user = register)
+    if db.vertified == True:
+        del request.session['rand']
+        del request.session['register']
+        return render(request,"login.html",{"login":"register_success"})
     else:
-        return HttpResponse("404")
+        return HttpResponse("您還沒有驗證，請到您剛剛輸入的email收信喔~")
+    
 #==============  照片上傳 =================#
 def pictureupdate(request):
     saved = 1

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>驗證</title>
+</head>
+<body>
+    <p class="success"> 註冊成功，已寄送驗證信，請前去信箱驗證收信</p>
+    <p>如果未收到信，請點[再寄一次]</p>
+
+    {% if resend == "success" %}
+    <p>重新寄送成功</p>
+    {% endif %}
+    <a href=""> 再寄一次 </a>
+
+    <a href="{% url 'register_success' %}">驗證</a>
+
+</body>
+</html>

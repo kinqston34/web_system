@@ -10,6 +10,8 @@
             <p> 表單輸入有誤，請重新註冊一次 </p>
         {% elif register == "registered" %}
             <p> 帳號已經註冊過了 </p>
+        {% elif register == "again" %}
+            <p> 不好意思，找不到有發驗證信的紀錄，麻煩再註冊一次</p>
         {% endif %}
       <form action= "{% url 'register' %}" method="post">
         {% csrf_token %}
