@@ -15,6 +15,8 @@
 1. 修改密碼 v4 (完成)
 2. 註冊驗證 v2 (完成，驗證信)
 3. 新增登入驗證(vertified)完成
+4. home_list新增顯示 vertified 欄位
+ 
 
 
 
