@@ -109,7 +109,8 @@ def forget_password(request,rand=None):
             username = [True,data.user]
             send_forget_email(request,data.user)    #傳送email
             # print(request.session['rand'])
-            
+            request.session["user"] = data.user
+
             return render(request,"forget_password2.html",{"user":username}) 
                
     if 'rand' in request.session and request.session['rand'] == rand:   #驗證信成功   
@@ -122,7 +123,9 @@ def forget_password(request,rand=None):
         else:
             data.checkemail = True
             data.save()
-        return HttpResponse("驗證成功，請回到剛剛畫面按下，[驗證]")
+            response = HttpResponse("驗證成功，請回到剛剛畫面按下，[驗證]")
+            response.set_cookie("count",'0')
+        return response
     else:
         if rand == None:
             return render(request,"forget_password2.html")
@@ -135,8 +138,13 @@ def reset_password(request):
     fp = ForgetPassword.objects.get(visitor=data) 
     
     if request.method == "POST":
-        if fp.checkemail == True:
-        
+
+        if fp.checkemail == True and 'count' in request.COOKIES and request.COOKIES['count'] == '0' :
+            respone = render(request,"forget_password2.html",{"token":True,"user":user})
+            respone.set_cookie('count','1')
+            return respone
+        elif fp.checkemail == True :
+            print('ok')
             form = ResetPasswordForm(request.POST)
             if form.is_valid():
                 password = form.cleaned_data['password']
@@ -145,15 +153,18 @@ def reset_password(request):
                     return render(request,"forget_password2.html",{"token":True,"user":user,"error":True})
                 else:
                     # data = Visitor.objects.get(user=user)
-                    data.password = password
+                    data.password = password                            #更新資料庫密碼 ，並且將設定通關cookies 刪除 and checkmail 改回預設 
                     data.save()
                     respone = redirect("login")
+                    respone.delete_cookie('count')
                     respone.set_cookie("modify_password","success")
+                    fp.checkemail = False
+                    fp.save()
                     return respone
             else:
                 return render(request,"forget_password2.html",{"token":True,"user":user,"error":"more"})
     
-        elif fp.checkemail == False:
+        else:
             user = [True,user]
             return render(request,"forget_password2.html",{"user":user,"error":"no"})
     

@@ -31,7 +31,7 @@ DEBUG = True
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static/'),)
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','6178-218-161-97-197.ngrok-free.app']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','067b-218-161-97-197.ngrok-free.app']
 CSRF_TRUSTED_ORIGINS = ["https://*.ngrok-free.app"]
 
 # Application definition
