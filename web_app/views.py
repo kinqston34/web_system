@@ -67,6 +67,9 @@ def login(request,login=None):
             print("帳號",user)
             print("密碼",password)
             if user and password:    #確認帳號密碼 是否都是對的
+                data = Visitor.objects.get(user = user)
+                if data.vertified == False:   #檢查驗證
+                    return render(request,"login.html",{"login":"no-vertified"}) 
                 request.session['login_user'] = user
                 responese = redirect('home')
                 responese.set_cookie("login_id","1")

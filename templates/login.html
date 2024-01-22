@@ -33,6 +33,8 @@
                     <span class="alarm">
                         不合法的輸入，規則如備註
                     </span>
+                    {% elif login == "no-vertified" %}
+                    <p class="alarm">此帳號未驗證通過</p>
                     {% endif %}
 
                     {% if modify == "success" %}
